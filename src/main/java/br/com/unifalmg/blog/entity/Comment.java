@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Getter
@@ -12,20 +11,24 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(schema = "db2022108043", name = "post")
-public class Post implements Serializable {
+@Table(schema = "db2022108043", name = "comment")
+public class Comment implements Serializable {
 
     @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String title;
+    private String name;
+
+    private String email;
 
     private String body;
 
     @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @OneToMany(mappedBy = "post")//, cascade = CascadeType.ALL)
-    private List<Comment> comments;
 }
