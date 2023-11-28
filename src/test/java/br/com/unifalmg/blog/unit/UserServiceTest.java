@@ -11,6 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,9 +39,9 @@ public class UserServiceTest {
     @DisplayName("#findById > When the id is not null > When a user is found > Return the user")
     void findByIdWhenTheIdIsNotNullWhenAUserIsFoundReturnTheUser() {
         when(repository.findById(1)).thenReturn(Optional.of(User.builder()
-                        .id(1)
-                        .name("Fellipe")
-                        .username("felliperey")
+                .id(1)
+                .name("Fellipe")
+                .username("felliperey")
                 .build()));
         User response = service.findById(1);
         assertAll(
@@ -56,6 +59,36 @@ public class UserServiceTest {
                 service.findById(2));
     }
 
-    // TODO: Implement test cases for getAllUsers
+    @Test
+    @DisplayName("#getAllUsers > When there are users > Return the list of users")
+    void getAllUsersWhenThereAreUsersReturnListOfUsers() {
 
+        when(repository.findAll()).thenReturn(Arrays.asList(
+                User.builder().id(1).name("User1").username("user1").build(),
+                User.builder().id(2).name("User2").username("user2").build()
+        ));
+
+
+        List<User> result = service.getAllUsers();
+
+
+        assertEquals(2, result.size());
+        assertEquals("User1", result.get(0).getName());
+        assertEquals("user1", result.get(0).getUsername());
+        assertEquals("User2", result.get(1).getName());
+        assertEquals("user2", result.get(1).getUsername());
+    }
+
+    @Test
+    @DisplayName("#getAllUsers > When there are no users > Return an empty list")
+    void getAllUsersWhenThereAreNoUsersReturnEmptyList() {
+
+        when(repository.findAll()).thenReturn(Collections.emptyList());
+
+
+        List<User> result = service.getAllUsers();
+
+
+        assertEquals(0, result.size());
+    }
 }
